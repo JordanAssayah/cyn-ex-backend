@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: jordanassayah@gmail.com
+    name: Jordan Assayah
+  description: Manage users
+  title: Concerts API
+  version: "1.0"
+servers:
+- description: Development
+  url: http://localhost:3001
+tags:
+- name: Users
+paths:
+  /users:
+    get:
+      description: Get the list of all users
+      operationId: getAllUsers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+                type: array
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      summary: Get all
+      tags:
+      - Users
+      x-eov-operation-handler: controllers/UsersController
+    post:
+      description: Create a new user
+      operationId: createNewUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      summary: Create new
+      tags:
+      - Users
+      x-eov-operation-handler: controllers/UsersController
+  /users/{id}:
+    get:
+      description: Get user by id
+      operationId: getUserById
+      parameters:
+      - description: Id of the user
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:query
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get by id
+      tags:
+      - Users
+      x-eov-operation-handler: controllers/UsersController
+components:
+  schemas:
+    UserResponse:
+      example:
+        address: address
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: 0
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: stringquery
+      type: object
+    UserCreateRequest:
+      example:
+        address: address
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+      type: object
